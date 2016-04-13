@@ -309,7 +309,7 @@ draw <- function(v, dim.x, dim.y) {
   image(temp, col = gray(255:0/255), axes = FALSE)
 }
 
-# ========-data export=======
+# =========data export=======
 write.csv(pixels, file="pixels.csv")
 write.csv(pixels.norm, file="pixels_norm.csv")
 
@@ -333,6 +333,23 @@ for (i in 1:size) {
 
 write.csv(sample.gaussian, file="sample_gaussian.csv")
 write.csv(image.sub, file="subimages.csv")
+
+# ========features===========
+features <- sample.gaussian
+features <- sqrt(features)
+write.csv(features, file = "features.csv")
+
+# =========svm features=======
+# feature scaling such that each feature has mean 0 and sd 1
+features.scale <- features
+
+for (i in 1:200) {
+  temp.mean <- mean(features[,i])
+  temp.sd <- sd(features[,i])
+  features.scale[,i] <- (features.scale[,i] - temp.mean)/temp.sd
+}
+
+write.csv(features.scale, file="svm_features.csv")
 
 # =======testing=============
 test.sobel <- getSobel(pixels[1,])
